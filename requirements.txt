@@ -1,0 +1,11 @@
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+torch
+nbformat
+nbconvert
+ipykernel
+jupyter_client
