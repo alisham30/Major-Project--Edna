@@ -161,7 +161,39 @@ Everything else follows the slide equations one to one.
 
 Filled in from the executed notebook; see Step 10 for the full scoreboard.
 
-RESULTS_PLACEHOLDER
+Primary seed 42, test split of never-seen ASVs from known genera; robustness over 5 seeds with identical splits.
+
+| Quantity | Primary seed | Mean +- sd over seeds |
+|---|---|---|
+| Genus top-1 accuracy (chance 1.9%) | 74.4% (top-3 86.7%, family 72.7%) | 76.6 +- 4.0% |
+| Sequence-only ablation accuracy | 77.6% | 77.5 +- 3.1% |
+| Open-set AUROC, energy, never-seen genera | 0.774 | 0.763 +- 0.021 |
+| Open-set AUROC, max-softmax baseline | 0.757 | 0.786 +- 0.020 |
+| Open-set AUROC, known-unknowns (trained-on hidden genera) | 1.000 | - |
+| Novelty balanced accuracy: adaptive (calibrated) / fixed / MSP | 0.676 / 0.670 / 0.706 | 0.674 +- 0.031 / 0.676 +- 0.029 / 0.733 +- 0.028 |
+| Learned threshold (hinge loss) | tau0 = -0.31, alpha = +0.22 | calibrated alpha_total 0.08 +- 0.76 |
+| Dark taxa flagged as possible novel | 61.6% of rows | - |
+| Dark ASVs seen in more than one year | 79.1% | - |
+
+Hypothesis tests (alpha = 0.05):
+
+| ID | Claim | p-value | Effect | Decision |
+|---|---|---|---|---|
+| H1 | Never-seen genera have higher energy than known genera | < 1e-6 | Cliff's delta = +0.549 | REJECT H0 |
+| H2 | Adding environmental context (month + CTD) raises genus accuracy | 0.637 | mean accuracy gain (full - seq-only) = -0.009 | fail to reject H0 |
+| H3 | Calibrated adaptive tau(e) beats a fixed tau on balanced accuracy | 0.713 | mean balanced-accuracy gain = -0.001 | fail to reject H0 |
+| H4a | Known ASVs from well-sampled conditions get lower energy (negative correlation) | 0.317 | Spearman rho = -0.013 | fail to reject H0 |
+| H4b | Samples from rarely-explored conditions carry a larger share of candidate novel taxa | 0.778 | Spearman rho = +0.101 | fail to reject H0 |
+| H5 | One-off and recurring dark ASVs differ in energy (we predict they do NOT) | 0.63 | Cliff's delta = -0.012 | fail to reject H0 |
+| H6 | Real dark taxa are flagged as novel more often than known test ASVs | < 1e-6 | flag-rate difference = +0.440 | REJECT H0 |
+
+3 of 7 predictions were confirmed. The ranked shortlist of candidate novel taxa is in `outputs/candidate_novel_taxa_ranked.csv` after a run, and the top 20 are printed in Step 7 of the notebook.
+
+What this means:
+
+- **Supported.** The model names the genus of never-seen ASVs with about 77 percent top-1 accuracy from one forward pass. The energy score separates never-seen genera from known ones with a large effect (H1), real dark taxa are flagged about four times as often as known ASVs (H6), and persistence is independent of energy (H5), so the ranking score combines two non-redundant signals.
+- **Not supported on this dataset.** Environmental context did not raise genus accuracy over five seeds (H2): every ASV in a cruise shares the same context, so it cannot separate genera within a sample. It did raise open-set AUROC slightly (0.763 vs 0.739 sequence-only). The exploration-aware slope had no measurable effect (H3, H4a, H4b) because `log rho(e)` spans barely one unit at a single surface station, and its calibrated sign flips between seeds. Max-softmax is marginally better than energy at ranking never-seen genera (0.786 vs 0.763).
+- **Why this is still a result.** The components that failed are exactly the ones that need variation in depth, season coverage or station; the dataset has none. The design is shown to be safe (it never hurts), and the next step is a depth-resolved or multi-station eDNA series where the exploration-aware threshold has room to act.
 
 ## 9. Limitations and future work
 

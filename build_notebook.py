@@ -1046,11 +1046,13 @@ print("\nArtefacts written to", OUT_DIR); print(sorted(p.name for p in OUT_DIR.i
 md(r"""
 ## Conclusion
 
-* **Classification head** names the genus of unseen ASVs with high accuracy from a single forward pass: no BLAST, no Kraken2, no live database search.
-* **Environment branch** adds measurable accuracy over a sequence-only model (H2), confirming that *where and when* water was sampled carries taxonomic signal.
-* **Energy score** cleanly separates genera the model has never seen from genera it knows (H1), where the usual max-softmax rule is weaker.
-* **Exploration-aware threshold** `tau(e) = tau0 + alpha log rho(e)`: the scoreboard above reports exactly how much the density term moved the cutoff and whether it helped (H3, H4a, H4b). At a single surface station revisited 20 times the range of `log rho(e)` is narrow, so this component is validated as *safe* (it never hurts) more than as *decisive*; a depth-resolved or multi-station dataset is where it should pay off.
-* **Persistence ranking** is statistically independent of the energy score (H5), so `N(s) = sigmoid(E - tau) . P(s)^beta` combines two non-redundant signals and yields a ranked shortlist of candidate novel marine taxa from the real Monterey Bay time series (H6).
+* **Classification head** names the genus of ASVs it has never seen with about 77 % top-1 accuracy (chance 1.9 %) and about 87 % top-3, from a single forward pass: no BLAST, no Kraken2, no live database search.
+* **Energy score** separates never-seen genera from known genera with a large effect (H1, Cliff's delta about 0.55) and flags real dark taxa roughly four times as often as known ASVs (H6). It is perfect on *known unknowns* and comparable to max-softmax on *unknown unknowns*: on this short marker the two uncertainty measures carry similar information, and energy's practical advantage is that its threshold is learned jointly with the network.
+* **Environment branch** did *not* raise genus accuracy across five seeds (H2). At a single surface station every ASV in a cruise shares the same context, so context cannot discriminate between genera *within* a sample; it did nudge open-set AUROC upward (about 0.76 vs 0.74 sequence-only). This branch is where depth and multi-station data would enter.
+* **Exploration-aware threshold** `tau(e) = tau0 + alpha log rho(e)`: `log rho(e)` spans barely one unit here, the calibrated slope flips sign between seeds, and the rule neither helps nor hurts (H3, H4a, H4b). The component is validated as *safe*; a depth-resolved or multi-station dataset is where it should become *decisive*.
+* **Persistence ranking** is statistically independent of the energy score (H5), so `N(s) = sigmoid(E - tau) . P(s)^beta` combines two non-redundant signals and yields a ranked shortlist of candidate novel marine taxa from the real Monterey Bay time series.
+
+Three of seven predictions were confirmed. Each of the four that failed did so for an identifiable, data-driven reason (one station, surface only, near-uniform sampling effort) that the next dataset can test directly.
 
 ## Limitations and future work
 
