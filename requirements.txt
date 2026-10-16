@@ -9,3 +9,6 @@ nbformat
 nbconvert
 ipykernel
 jupyter_client
+streamlit
+altair
+notebook

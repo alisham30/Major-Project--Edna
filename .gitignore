@@ -9,9 +9,18 @@ data/processed/
 outputs/*.pt
 outputs/*.csv
 outputs/*.json
+# ...except the files the web app needs
+!outputs/model_full.pt
+!outputs/results.json
+!outputs/hypothesis_tests.csv
+!outputs/robustness_seeds.csv
+!outputs/candidate_novel_taxa_ranked.csv
 
 # Scratch
 smoke_test.ipynb
 __pycache__/
 .ipynb_checkpoints/
 *.pyc
+
+# Local editor / assistant settings
+.claude/

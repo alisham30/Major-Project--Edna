@@ -53,6 +53,10 @@ Training loss: `L = L_cls + 0.5 * L_novel`, where `L_cls` is cross-entropy over 
 | `data/raw/dataset-edna-main/raw/` | The three source tables: `asv_table.csv`, `taxa_table.csv`, `metadata_table.csv` (65 MB, committed). |
 | `data/processed/` | Model-ready tables written by Step 1b of the notebook (regenerated on each run, not committed). |
 | `outputs/` | Figures (`fig1` to `fig6`, committed), plus model weights, training history, ranked candidate novel taxa, hypothesis-test table and `results.json` (regenerated, not committed). |
+| `app/app.py`, `app/engine.py` | **Web app** (Streamlit). The engine runs the notebook's own data and model cells and loads the trained weights, so the app uses exactly the code behind the reported results. |
+| `docs/HOW_WE_BUILT_IT.md` | How the implementation was executed: slide-to-code mapping, data pipeline, splits, training, evaluation, and what went wrong and how it was fixed. Also shown inside the app. |
+| `docs/PRESENTATION_NOTES.md` | Speaking notes, the live demo script and likely viva questions with answers. |
+| `.streamlit/config.toml` | Theme for the web app. |
 | `requirements.txt` | Python dependencies. |
 
 ## 3. Dataset
@@ -87,7 +91,15 @@ python -m ipykernel install --user --name python3
 
 Option A, just read it: open `eDNA_OpenSet_NovelTaxa.html` in a browser, or open the `.ipynb` in Jupyter / VS Code. All outputs are already there.
 
-Option B, re-run everything (about 15 minutes on a laptop CPU):
+Option B, open the web app. It loads the trained model in about 5 seconds and opens at http://localhost:8501:
+
+```bash
+python -m streamlit run app/app.py
+```
+
+The app has seven pages: Overview, Live demo (classify any ASV or pasted sequence, with a step-by-step walkthrough and a mutation stress test), Novel taxa discovery (ranked shortlist with filters and CSV download), Hypothesis testing, Results, Dataset and How we built it. It needs `outputs/model_full.pt`, `outputs/results.json` and the result tables in `outputs/`, which are committed.
+
+Option C, re-run everything (about 15 minutes on a laptop CPU when cached seed models are present, about 40 minutes from scratch):
 
 ```bash
 python build_notebook.py

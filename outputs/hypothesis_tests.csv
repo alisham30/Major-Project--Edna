@@ -1,0 +1,8 @@
+H,claim,test,statistic,p_value,effect,effect_size,decision,matches_prediction
+H1,Never-seen genera have higher energy than known genera,Mann-Whitney U (one-sided),3045386.0,0.0,0.5487239360809326,Cliff's delta,REJECT H0,True
+H2,Adding environmental context (month + CTD) raises genus accuracy,Paired t-test across 5 seeds (one-sided),-0.37641791367378874,0.6371392457812928,-0.00883652430044184,mean accuracy gain (full - seq-only),fail to reject H0,False
+H3,Calibrated adaptive tau(e) beats a fixed tau on balanced accuracy,Paired t-test across 5 seeds (one-sided),-0.6106893143001099,0.7127990872511176,-0.0012638935223231896,mean balanced-accuracy gain,fail to reject H0,False
+H4a,Known ASVs from well-sampled conditions get lower energy (negative correlation),Spearman rank correlation (one-sided),-0.012941467382475886,0.3168635661194053,-0.012941467382475886,Spearman rho,fail to reject H0,False
+H4b,Samples from rarely-explored conditions carry a larger share of candidate novel taxa,"Spearman rank correlation (one-sided), per sample",0.10139994437223016,0.7776187450243466,0.10139994437223016,Spearman rho,fail to reject H0,False
+H5,One-off and recurring dark ASVs differ in energy (we predict they do NOT),Mann-Whitney U (two-sided),1005289.0,0.6300168633460999,-0.01155167818069458,Cliff's delta,fail to reject H0,True
+H6,Real dark taxa are flagged as novel more often than known test ASVs,Two-proportion z-test (one-sided),32.42183260051258,6.758643841805868e-231,0.44035352753867685,flag-rate difference,REJECT H0,True
